@@ -1,0 +1,16 @@
+# Install GitHub CLI
+brew install gh
+
+# Github login
+gh auth login
+
+# Get dotfiles
+gh repo clone magax/dotfiles
+
+# Create symlinks to $HOME
+ln -s -f "$HOME"/dotfiles/.Brewfile "$HOME" && \
+ln -s -f "$HOME"/dotfiles/.gitconfig "$HOME" && \
+ln -s -f "$HOME"/dotfiles/.tmux.conf "$HOME" && \
+ln -s -f "$HOME"/dotfiles/.zshrc "$HOME" && \
+ln -s -f "$HOME"/dotfiles/nvim "$HOME" && \
+ln -s -f "$HOME"/dotfiles/pretty.zsh-theme "$HOME"/.oh-my-zsh/custom/themes/

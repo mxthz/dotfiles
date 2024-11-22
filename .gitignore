@@ -1,0 +1,8 @@
+nvim/plugin/packer_compiled.lua
+nvim/lua/secrets.lua
+configstore/update-notifier-gitmoji-cli.json
+.android/
+gh/
+settings
+swiftpm/
+tool_state
