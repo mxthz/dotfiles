@@ -15,13 +15,15 @@ set.expandtab = true
 set.splitbelow = true
 set.splitright = true
 
----- removes cursorline (keep only line number highlight)
---vim.cmd([[ hi CursorLine gui=NONE ]])
-
--- Keep undo files on RAM
+-- Keep undo files
 set.undofile = true
 set.undodir = vim.fn.expand "~/.undofiles"
 
 -- Remove backup and swap files
 set.backup = false
 set.swapfile = false
+
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = "*.arb",
+  command = "set filetype=json"
+})

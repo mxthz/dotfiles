@@ -3,7 +3,7 @@ local fn = vim.fn
 local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 if fn.empty(fn.glob(install_path)) > 0 then
   packer_bootstrap =
-    fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
+      fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
   vim.cmd([[packadd packer.nvim]])
 end
 
@@ -28,6 +28,9 @@ return require("packer").startup(function(use)
     requires = { "nvim-lua/plenary.nvim" },
   }
 
+  -- File explorer
+  use { "stevearc/oil.nvim" }
+
   -- Icons
   use { "nvim-tree/nvim-web-devicons" }
 
@@ -44,12 +47,13 @@ return require("packer").startup(function(use)
   use {
     "hrsh7th/nvim-cmp",
     "hrsh7th/cmp-nvim-lsp", -- LSP completion
-    "hrsh7th/cmp-buffer", -- buffer completion
-    "hrsh7th/cmp-path", -- path completion
+    "hrsh7th/cmp-buffer",   -- buffer completion
+    "hrsh7th/cmp-path",     -- path completion
     -- snippet completion
     "L3MON4D3/LuaSnip",
-    "saadparwaiz1/cmp_luasnip"
+    "saadparwaiz1/cmp_luasnip",
   }
+
 
   -- Vim Airline
   use { "vim-airline/vim-airline" }
@@ -64,10 +68,10 @@ return require("packer").startup(function(use)
   use {
     'nvim-flutter/flutter-tools.nvim',
     requires = {
-        'nvim-lua/plenary.nvim',
-        'stevearc/dressing.nvim', -- optional for vim.ui.select
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- optional for vim.ui.select
     },
-}
+  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

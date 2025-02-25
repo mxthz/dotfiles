@@ -11,4 +11,6 @@ require("config/treesitter")
 require("config/fzf")
 require("config/cmp")
 require("config/flutter-tools")
+require("config/oil")
+
 require("nvim-autopairs").setup({})

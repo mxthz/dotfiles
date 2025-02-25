@@ -51,34 +51,19 @@ require("mason").setup()
 require("mason-lspconfig").setup({
   ensure_installed = {
     "lua_ls",
-    "rust_analyzer",
     "ts_ls",
+    "jsonls",
+    "rust_analyzer",
   }
 })
 
-require("lspconfig").lua_ls.setup({
-  on_attach = on_attach,
-  flags = lsp_flags,
-})
-
-require("lspconfig").ts_ls.setup({
-  on_attach = on_attach,
-  flags = lsp_flags,
-})
-
-require("lspconfig").rust_analyzer.setup({
-  on_attach = on_attach,
-  flags = lsp_flags,
-})
-
---require("lspconfig").dartls.setup({
-  --on_attach = on_attach,
-  --flags = lsp_flags,
---})
-
-require("lspconfig").emmet_language_server.setup({
-  on_attach = on_attach,
-  flags = lsp_flags,
+require("mason-lspconfig").setup_handlers({
+  function(server)
+    require("lspconfig")[server].setup({
+      on_attach = on_attach,
+      flags = lsp_flags,
+    })
+  end,
 })
 
 local module = {
