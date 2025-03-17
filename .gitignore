@@ -1,0 +1,5 @@
+nvim/plugin/packer_compiled.lua
+nvim/lua/secrets.lua
+.DS_Store
+.Brewfile.lock.json
+*.log

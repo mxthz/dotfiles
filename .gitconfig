@@ -1,0 +1,31 @@
+[alias]
+  a = add
+  aa = add -A
+	br = branch
+	cm = commit
+  cma = commit --amend
+  co = checkout
+	df = diff
+  dfs = diff --staged
+  ft = fetch
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  mr = merge
+  pl = pull
+  ps = push
+  psf = push -f
+  psu = !git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)
+	rs = restore
+  rb = rebase
+	st = status
+	sth = stash
+	stha = stash apply
+	sthl = stash list
+	sthp = stash pop
+  sthd = stash drop
+[safe]
+	directory = /opt/homebrew
+[user]
+	name = Max
+	email = max@yonoco.app
+[init]
+	defaultBranch = main
