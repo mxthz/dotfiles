@@ -1,9 +1,5 @@
 # =============================================================================
-# ZSH Configuration File
-# =============================================================================
-
-# =============================================================================
-# Environment Variables
+#                            ZSH Configuration File
 # =============================================================================
 
 # XDG Base Directory Specification
@@ -17,7 +13,7 @@ ZSH_THEME="pretty"
 plugins=(git)
 
 # =============================================================================
-# Path Management
+#                                Path Management
 # =============================================================================
 
 # Helper function to add to PATH only if directory exists and isn't already in PATH
@@ -44,7 +40,7 @@ pathadd "$HOME/bin"
 pathadd "$HOME/dotfiles/shell_scripts"
 
 # =============================================================================
-# Development Environments
+#                           Development Environments
 # =============================================================================
 
 # Android Studio
@@ -81,7 +77,7 @@ export CPPFLAGS="${JAVA_CPPFLAGS} ${NODE_CPPFLAGS}"
 export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
 
 # =============================================================================
-# Aliases
+#                                    Aliases
 # =============================================================================
 
 alias sudo="sudo "
@@ -92,7 +88,7 @@ alias bbd='brew bundle dump -f --global'
 alias t="tree"
 
 # =============================================================================
-# Plugins and Extensions
+#                            Plugins and Extensions
 # =============================================================================
 
 # Source plugins
@@ -102,11 +98,3 @@ source "/opt/homebrew/opt/zsh-git-prompt/zshrc.sh"
 
 # Load Oh My Zsh
 source $ZSH/oh-my-zsh.sh
-
-# =============================================================================
-# Performance Profiling
-# =============================================================================
- function timezsh() {
-   shell=${1-$SHELL}
-   for i in $(seq 1 10); do /usr/bin/time $shell -i -c exit; done
- }
