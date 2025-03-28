@@ -1,10 +1,14 @@
--- CORE
-require("colorscheme")
-require("options")
-require("keymaps")
+-- =============================================================================
+--                                     CORE
+-- =============================================================================
+require("core")
 require("scripts/comment-header")
--- PLUGINS
+
+-- =============================================================================
+--                                    PLUGINS
+-- =============================================================================
 require("plugins")
+
 --Configs
 require("config/lsp")
 require("config/none-ls")
@@ -15,8 +19,3 @@ require("config/flutter-tools")
 require("config/oil")
 
 require("nvim-autopairs").setup({})
-
-vim.api.nvim_create_user_command("Reload", function()
-	vim.cmd("e!")
-	vim.lsp.buf_attach_client(0, vim.lsp.get_active_clients()[1].id)
-end, {})
