@@ -2,7 +2,7 @@
 --                                     CORE
 -- =============================================================================
 require("core")
-require("scripts/comment-header")
+require("custom_scripts.comment-header")
 
 -- =============================================================================
 --                                    PLUGINS
@@ -10,12 +10,12 @@ require("scripts/comment-header")
 require("plugins")
 
 --Configs
-require("config/lsp")
-require("config/none-ls")
-require("config/treesitter")
-require("config/fzf")
-require("config/cmp")
-require("config/flutter-tools")
-require("config/oil")
+require("plugins_setup.lsp")
+require("plugins_setup.none-ls")
+require("plugins_setup.treesitter")
+require("plugins_setup.fzf")
+require("plugins_setup.cmp")
+require("plugins_setup.flutter-tools")
+require("plugins_setup.oil")
 
 require("nvim-autopairs").setup({})
