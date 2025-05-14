@@ -54,16 +54,16 @@ require("mason-lspconfig").setup({
     "ts_ls",
     "jsonls",
     "rust_analyzer",
+  },
+  handlers = {
+    -- Default handler for all servers
+    function(server)
+      require("lspconfig")[server].setup({
+        on_attach = on_attach,
+        flags = lsp_flags
+      })
+    end,
   }
-})
-
-require("mason-lspconfig").setup_handlers({
-  function(server)
-    require("lspconfig")[server].setup({
-      on_attach = on_attach,
-      flags = lsp_flags,
-    })
-  end,
 })
 
 local module = {
