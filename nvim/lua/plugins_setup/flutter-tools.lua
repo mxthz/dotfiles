@@ -29,13 +29,8 @@ local function getLocalIp()
 end
 
 local localIp = getLocalIp()
-local mapboxToken = require("secrets").MAPBOX_TOKEN
 local function getRunCommand()
-	return string.format(
-		":FlutterRun --dart-define MAPBOX_TOKEN=%s --dart-define LOCAL_IP=%s -d ",
-		mapboxToken,
-		localIp
-	)
+	return string.format(":FlutterRun --dart-define LOCAL_IP=%s -d ", localIp)
 end
 
 local opts = { silent = true, noremap = true }
