@@ -80,6 +80,7 @@ export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
 #                                    Aliases
 # =============================================================================
 
+alias tmux='tmux attach || tmux new-session'
 alias sudo="sudo "
 alias v='nvim'
 alias vim='nvim'
