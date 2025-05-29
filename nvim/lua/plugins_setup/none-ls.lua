@@ -6,7 +6,7 @@ local lSsources = {
 	null_ls.builtins.formatting.stylelint,
 	null_ls.builtins.formatting.shellharden,
 	null_ls.builtins.formatting.shfmt,
-	null_ls.builtins.formatting.sql_formatter,
+	null_ls.builtins.formatting.pg_format,
 	null_ls.builtins.formatting.dart_format,
 	-- DIAGNOSTICS
 	null_ls.builtins.diagnostics.stylelint,
