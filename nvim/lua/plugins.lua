@@ -51,6 +51,22 @@ return require("packer").startup(function(use)
 		"saadparwaiz1/cmp_luasnip",
 	})
 
+  -- AI completion
+    use {
+        "Exafunction/windsurf.nvim",
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "hrsh7th/nvim-cmp",
+        },
+        config = function()
+            if vim.bo.filetype == "oil" then
+                vim.g.codeium_enabled = false
+                return
+            end
+            require("codeium").setup({})
+        end
+    }
+
 	-- Vim Airline
 	use({ "vim-airline/vim-airline" })
 
