@@ -59,14 +59,14 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 -- Reload and attach LSP client
 vim.api.nvim_create_user_command("Reload", function()
 	vim.cmd("e!")
-	vim.lsp.buf_attach_client(0, vim.lsp.get_active_clients()[1].id)
+	vim.lsp.buf_attach_client(0, vim.lsp.get_clients()[1].id)
 end, {})
 
 -- Properly detach LSP clients when closing a buffer
 vim.api.nvim_create_autocmd("BufDelete", {
 	callback = function(args)
 		local bufnr = args.buf
-		local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+		local clients = vim.lsp.get_clients({ bufnr = bufnr })
 		for _, client in ipairs(clients) do
 			vim.lsp.buf_detach_client(bufnr, client.id)
 		end
