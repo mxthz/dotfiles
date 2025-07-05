@@ -12,6 +12,11 @@ local lSsources = {
 	null_ls.builtins.diagnostics.stylelint,
 }
 
+require("mason-null-ls").setup({
+    ensure_installed = nil,
+    automatic_installation = true,
+})
+
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 require("null-ls").setup({
 	sources = lSsources,
@@ -24,8 +29,8 @@ require("null-ls").setup({
 				callback = function()
 					vim.lsp.buf.format({
 						bufnr = bufnr,
-						filter = function(client)
-							return client.name == "null-ls"
+						filter = function(c)
+							return c.name == "null-ls"
 						end,
 					})
 				end,
