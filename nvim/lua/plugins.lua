@@ -21,11 +21,9 @@ return require("packer").startup(function(use)
 		"williamboman/mason-lspconfig.nvim",
 		"neovim/nvim-lspconfig",
 	})
-
-	use({
-		"nvimtools/none-ls.nvim",
-		requires = { "nvim-lua/plenary.nvim" },
-	})
+	-- Linters & Formatters
+	use({ "nvimtools/none-ls.nvim", requires = { "nvim-lua/plenary.nvim" } })
+	use({ "jay-babu/mason-null-ls.nvim", requires = { "nvim-lua/plenary.nvim", "nvimtools/none-ls.nvim" } })
 
 	-- File explorer
 	use({ "stevearc/oil.nvim" })
