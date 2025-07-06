@@ -8,7 +8,7 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, opts)
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
+local on_attach = function(_, bufnr)
 	-- Enable completion triggered by <c-x><c-o>
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
@@ -27,7 +27,7 @@ local on_attach = function(client, bufnr)
 	end, bufopts)
 	vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, bufopts)
 	vim.keymap.set("n", "gR", vim.lsp.buf.rename, bufopts)
-	vim.keymap.set("n", "ca", vim.lsp.buf.code_action, bufopts)
+	vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, bufopts)
 	vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
 	-- "vim.lsp.buf.formatting" was default
 	-- but flutter-tools conflicts and prompt to choose a server while formatting
@@ -48,23 +48,33 @@ local lsp_flags = {
 }
 
 require("mason").setup()
+local lspconfig = require("lspconfig")
+
+-- A list of servers to install and configure
+local servers = {
+	"lua_ls",
+	"denols",
+	"jsonls",
+}
+
+-- Ensure these servers are installed by Mason
 require("mason-lspconfig").setup({
-	ensure_installed = {
-		"lua_ls",
-		"ts_ls",
-		"jsonls",
-		"rust_analyzer",
-	},
-	handlers = {
-		-- Default handler for all servers
-		function(server)
-			require("lspconfig")[server].setup({
-				on_attach = on_attach,
-				flags = lsp_flags,
-			})
-		end,
-	},
+	ensure_installed = servers,
 })
+
+for _, server_name in ipairs(servers) do
+	local server_opts = {
+		-- This is the crucial part: we pass our on_attach to every server.
+		on_attach = on_attach,
+	}
+
+	--   Server-specific overrides
+	if server_name == "denols" then
+		server_opts.root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc")
+	end
+
+	lspconfig[server_name].setup(server_opts)
+end
 
 local module = {
 	on_attach = on_attach,

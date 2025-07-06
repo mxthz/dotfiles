@@ -1,4 +1,3 @@
--- Check packer installation
 local packer_bootstrap
 local fn = vim.fn
 local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
@@ -9,87 +8,113 @@ if fn.empty(fn.glob(install_path)) > 0 then
 end
 
 return require("packer").startup(function(use)
-	-- Packer can manage itself`
+	-- Packer can manage itself
 	use("wbthomason/packer.nvim")
 
 	-- Color scheme
 	use({ "dracula/vim", as = "dracula" })
 
-	-- LSP
+	-- File Explorer
 	use({
-		"williamboman/mason.nvim",
-		"williamboman/mason-lspconfig.nvim",
-		"neovim/nvim-lspconfig",
+		"stevearc/oil.nvim",
+		config = function()
+			require("plugins_setup.oil")
+		end,
 	})
-	-- Linters & Formatters
-	use({ "nvimtools/none-ls.nvim", requires = { "nvim-lua/plenary.nvim" } })
-	use({ "jay-babu/mason-null-ls.nvim", requires = { "nvim-lua/plenary.nvim", "nvimtools/none-ls.nvim" } })
-
-	-- File explorer
-	use({ "stevearc/oil.nvim" })
 
 	-- Icons
 	use({ "nvim-tree/nvim-web-devicons" })
 
+	-- Comments
+	use({ "preservim/nerdcommenter" })
+
+	-- LSP
+	use({
+		"neovim/nvim-lspconfig",
+		requires = { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim" },
+		config = function()
+			require("plugins_setup.lsp")
+		end,
+	})
+
+	-- Linters & Formatters
+	use({
+		"nvimtools/none-ls.nvim",
+		requires = { "nvim-lua/plenary.nvim", "jay-babu/mason-null-ls.nvim" },
+		config = function()
+			require("plugins_setup.none-ls")
+		end,
+	})
+
 	-- Tree-sitter
 	use({
 		"nvim-treesitter/nvim-treesitter",
-		"nvim-treesitter/nvim-treesitter-context",
+		requires = { "nvim-treesitter/nvim-treesitter-context" },
+		run = ":TSUpdate",
+		config = function()
+			require("plugins_setup.treesitter")
+		end,
 	})
 
 	-- FZF Lua
-	use({ "ibhagwan/fzf-lua" })
+	use({
+		"ibhagwan/fzf-lua",
+		config = function()
+			require("plugins_setup.fzf")
+		end,
+	})
 
 	-- Completion
 	use({
 		"hrsh7th/nvim-cmp",
-		"hrsh7th/cmp-nvim-lsp", -- LSP completion
-		"hrsh7th/cmp-buffer", -- buffer completion
-		"hrsh7th/cmp-path", -- path completion
-		-- snippet completion
-		"L3MON4D3/LuaSnip",
-		"saadparwaiz1/cmp_luasnip",
+		requires = {
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+			"L3MON4D3/LuaSnip",
+			"saadparwaiz1/cmp_luasnip",
+		},
+		config = function()
+			require("plugins_setup.cmp")
+		end,
 	})
 
-  -- AI completion
-    use {
-        "Exafunction/windsurf.nvim",
-        requires = {
-            "nvim-lua/plenary.nvim",
-            "hrsh7th/nvim-cmp",
-        },
-        config = function()
-            if vim.bo.filetype == "oil" then
-                vim.g.codeium_enabled = false
-                return
-            end
-            require("codeium").setup({})
-        end
-    }
-
-	-- Vim Airline
-	use({ "vim-airline/vim-airline" })
-
-	-- Comments
-	use({ "preservim/nerdcommenter" })
-
 	-- Autopairs
-	use({ "windwp/nvim-autopairs" })
+	use({
+		"windwp/nvim-autopairs",
+		config = function()
+			require("nvim-autopairs").setup({})
+		end,
+	})
+
+	-- AI Completion
+	use({
+		"Exafunction/windsurf.nvim",
+		requires = { "nvim-lua/plenary.nvim", "hrsh7th/nvim-cmp" },
+		config = function() end,
+	})
 
 	-- Flutter
 	use({
 		"nvim-flutter/flutter-tools.nvim",
-		requires = {
-			"nvim-lua/plenary.nvim",
-			"stevearc/dressing.nvim", -- optional for vim.ui.select
-		},
+		requires = { "nvim-lua/plenary.nvim", "stevearc/dressing.nvim" },
+		config = function()
+			require("plugins_setup.flutter-tools")
+		end,
 	})
 
-	use("sphamba/smear-cursor.nvim")
-	require("smear_cursor").setup()
+	-- Vim Airline
+	use({ "vim-airline/vim-airline" })
 
-	-- Automatically set up your configuration after cloning packer.nvim
-	-- Put this at the end after all plugins
+	-- Smear Cursor
+	use({
+		"sphamba/smear-cursor.nvim",
+		config = function()
+			require("smear_cursor").setup()
+		end,
+	})
+
+	-- Automatically sync packer
 	if packer_bootstrap then
 		require("packer").sync()
 	end
