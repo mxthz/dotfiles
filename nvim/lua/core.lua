@@ -43,8 +43,6 @@ set.swapfile = false
 vim.g.mapleader = ","
 -- Highlights
 vim.keymap.set("n", "<leader>h", ":set hls!<CR>", opts)
--- Remap capital W command to lowercase (save) w
-vim.cmd("command! W w")
 vim.keymap.set("n", "<leader>;", "<C-^>", opts)
 
 -- =============================================================================
