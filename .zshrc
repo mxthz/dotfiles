@@ -3,7 +3,7 @@
 # =============================================================================
 
 # XDG Base Directory Specification
-export XDG_CONFIG_HOME="$HOME"
+export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 
@@ -74,7 +74,7 @@ export NODE_CPPFLAGS="-I/opt/homebrew/opt/node@18/include"
 export CPPFLAGS="${JAVA_CPPFLAGS} ${NODE_CPPFLAGS}"
 
 # Docker
-export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+export DOCKER_HOST="unix://${HOME}/.config/colima/default/docker.sock"
 
 # =============================================================================
 #                                    Aliases
