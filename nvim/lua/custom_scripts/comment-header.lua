@@ -4,7 +4,7 @@ local function get_comment_symbol()
 
 	if filetype == "javascript" or filetype == "typescript" or filetype == "dart" then
 		return "//"
-	elseif filetype == "lua" then
+	elseif filetype == "lua" or filetype == "sql" then
 		return "--"
 	elseif filetype == "vim" then
 		return '"'
@@ -41,7 +41,7 @@ local function insert_header()
 
 	-- Insert the header at the current line
 	local current_line = vim.fn.line(".")
-	vim.api.nvim_buf_set_lines(0, current_line, current_line, false, { header_line, title_line, header_line })
+	vim.api.nvim_buf_set_lines(0, current_line, current_line, false, { "", header_line, title_line, header_line, "" })
 end
 
 -- Map the function directly to <leader>s
