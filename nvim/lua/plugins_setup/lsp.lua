@@ -27,7 +27,8 @@ local on_attach = function(_, bufnr)
 	end, bufopts)
 	vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, bufopts)
 	vim.keymap.set("n", "gR", vim.lsp.buf.rename, bufopts)
-	vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, bufopts)
+	vim.keymap.set("n", "gx", vim.lsp.buf.code_action, bufopts)
+	vim.keymap.set("v", "gx", vim.lsp.buf.code_action, bufopts)
 	vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
 	-- "vim.lsp.buf.formatting" was default
 	-- but flutter-tools conflicts and prompt to choose a server while formatting
