@@ -1,23 +1,30 @@
 vim.keymap.set("n", "-", function()
-	-- Check if fyler buffer exists and is visible
-	local fyler_win = nil
+	local fyler = require("fyler")
 
+	-- Remember current window before toggling
+	local cur_win = vim.api.nvim_get_current_win()
+	local cur_buf = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(cur_win))
+	local is_in_fyler = cur_buf:match("fyler://")
+
+	-- Check if fyler is currently visible
+	local fyler_visible = false
 	for _, win in ipairs(vim.api.nvim_list_wins()) do
-		local buf = vim.api.nvim_win_get_buf(win)
-		local buf_name = vim.api.nvim_buf_get_name(buf)
+		local buf_name = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(win))
 		if buf_name:match("fyler://") then
-			fyler_win = win
+			fyler_visible = true
 			break
 		end
 	end
 
-	if fyler_win then
-		-- Fyler is open, close it
-		vim.api.nvim_win_close(fyler_win, false)
-	else
-		-- Fyler not open, open it as left sidebar then return focus to file buffer
-		require("fyler").open({ kind = "split_left" })
-		vim.cmd("wincmd p")
+	fyler.toggle()
+
+	-- If we just opened fyler (it wasn't visible), schedule focus back to file buffer
+	if not fyler_visible and not is_in_fyler then
+		vim.schedule(function()
+			if vim.api.nvim_win_is_valid(cur_win) then
+				vim.api.nvim_set_current_win(cur_win)
+			end
+		end)
 	end
 end, { desc = "Toggle fyler tree open/close" })
 
