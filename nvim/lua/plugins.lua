@@ -12,7 +12,7 @@ vim.pack.add({
 	{ src = "https://github.com/preservim/nerdcommenter" },
 
 	-- File Explorer
-	--{ src = "https://github.com/A7Lavinraj/fyler.nvim", name = "fyler.nvim", checkout = "stable" },
+	{ src = "https://github.com/A7Lavinraj/fyler.nvim", name = "fyler.nvim", checkout = "stable" },
 
 	-- LSP
 	{ src = "https://github.com/neovim/nvim-lspconfig" },
@@ -53,7 +53,7 @@ vim.pack.add({
 })
 
 -- Plugins config
---require("plugins_setup.fyler")
+require("plugins_setup.fyler")
 require("plugins_setup.lsp")
 require("plugins_setup.none-ls")
 require("plugins_setup.treesitter")
