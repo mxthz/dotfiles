@@ -12,7 +12,7 @@ vim.pack.add({
 	{ src = "https://github.com/preservim/nerdcommenter" },
 
 	-- File Explorer
-	{ src = "https://github.com/A7Lavinraj/fyler.nvim", name = "fyler.nvim", checkout = "stable" },
+	--{ src = "https://github.com/A7Lavinraj/fyler.nvim", name = "fyler.nvim", checkout = "stable" },
 
 	-- LSP
 	{ src = "https://github.com/neovim/nvim-lspconfig" },
@@ -40,9 +40,6 @@ vim.pack.add({
 	{ src = "https://github.com/hrsh7th/cmp-path" },
 	{ src = "https://github.com/L3MON4D3/LuaSnip" },
 	{ src = "https://github.com/saadparwaiz1/cmp_luasnip" },
-	-- GitHub Copilot
-	{ src = "https://github.com/zbirenbaum/copilot.lua", name = "copilot.lua" },
-	{ src = "https://github.com/zbirenbaum/copilot-cmp", name = "copilot-cmp" },
 
 	-- Autopairs
 	{ src = "https://github.com/windwp/nvim-autopairs" },
@@ -56,7 +53,7 @@ vim.pack.add({
 })
 
 -- Plugins config
-require("plugins_setup.fyler")
+--require("plugins_setup.fyler")
 require("plugins_setup.lsp")
 require("plugins_setup.none-ls")
 require("plugins_setup.treesitter")
@@ -64,5 +61,4 @@ require("plugins_setup.fzf")
 require("plugins_setup.cmp")
 require("plugins_setup.gitsigns")
 require("plugins_setup.flutter-tools")
-require("plugins_setup.copilot")
 require("nvim-autopairs").setup({})
