@@ -54,8 +54,11 @@ local lspconfig = require("lspconfig")
 -- A list of servers to install and configure
 local servers = {
 	"lua_ls",
-	"denols",
+	"ts_ls",
 	"jsonls",
+	"eslint",
+	"cssls",
+	"html",
 }
 
 -- Ensure these servers are installed by Mason
@@ -70,8 +73,39 @@ for _, server_name in ipairs(servers) do
 	}
 
 	--   Server-specific overrides
-	if server_name == "denols" then
-		server_opts.root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc")
+	if server_name == "ts_ls" then
+		server_opts.settings = {
+			typescript = {
+				inlayHints = {
+					includeInlayParameterNameHints = "all",
+					includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+					includeInlayFunctionParameterTypeHints = true,
+					includeInlayVariableTypeHints = true,
+					includeInlayPropertyDeclarationTypeHints = true,
+					includeInlayFunctionLikeReturnTypeHints = true,
+					includeInlayEnumMemberValueHints = true,
+				},
+			},
+			javascript = {
+				inlayHints = {
+					includeInlayParameterNameHints = "all",
+					includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+					includeInlayFunctionParameterTypeHints = true,
+					includeInlayVariableTypeHints = true,
+					includeInlayPropertyDeclarationTypeHints = true,
+					includeInlayFunctionLikeReturnTypeHints = true,
+					includeInlayEnumMemberValueHints = true,
+				},
+			},
+		}
+	elseif server_name == "eslint" then
+		server_opts.on_attach = function(client, bufnr)
+			on_attach(client, bufnr)
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				buffer = bufnr,
+				command = "EslintFixAll",
+			})
+		end
 	end
 
 	lspconfig[server_name].setup(server_opts)

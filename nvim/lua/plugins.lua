@@ -1,121 +1,68 @@
-local packer_bootstrap
-local fn = vim.fn
-local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-if fn.empty(fn.glob(install_path)) > 0 then
-	packer_bootstrap =
-		fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
-	vim.cmd([[packadd packer.nvim]])
-end
-
-return require("packer").startup(function(use)
-	-- Packer can manage itself
-	use("wbthomason/packer.nvim")
-
+vim.pack.add({
 	-- Color scheme
-	use({ "dracula/vim", as = "dracula" })
+	{ src = "https://github.com/dracula/vim", name = "dracula" },
 
-	-- File Explorer
-	use({
-		"stevearc/oil.nvim",
-		config = function()
-			require("plugins_setup.oil")
-		end,
-	})
+	-- Core deps
+	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 
 	-- Icons
-	use({ "nvim-tree/nvim-web-devicons" })
+	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
 
 	-- Comments
-	use({ "preservim/nerdcommenter" })
+	{ src = "https://github.com/preservim/nerdcommenter" },
+
+	-- File Explorer
+	{ src = "https://github.com/A7Lavinraj/fyler.nvim", name = "fyler.nvim", checkout = "stable" },
 
 	-- LSP
-	use({
-		"neovim/nvim-lspconfig",
-		requires = { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim" },
-		config = function()
-			require("plugins_setup.lsp")
-		end,
-	})
+	{ src = "https://github.com/neovim/nvim-lspconfig" },
+	{ src = "https://github.com/williamboman/mason.nvim" },
+	{ src = "https://github.com/williamboman/mason-lspconfig.nvim" },
 
 	-- Linters & Formatters
-	use({
-		"nvimtools/none-ls.nvim",
-		requires = { "nvim-lua/plenary.nvim", "jay-babu/mason-null-ls.nvim" },
-		config = function()
-			require("plugins_setup.none-ls")
-		end,
-	})
+	{ src = "https://github.com/nvimtools/none-ls.nvim" },
+	{ src = "https://github.com/jay-babu/mason-null-ls.nvim" },
 
 	-- Tree-sitter
-	use({
-		"nvim-treesitter/nvim-treesitter",
-		requires = { "nvim-treesitter/nvim-treesitter-context" },
-		run = ":TSUpdate",
-		config = function()
-			require("plugins_setup.treesitter")
-		end,
-	})
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-context" },
+
+	-- TypeScript & React support
+	{ src = "https://github.com/windwp/nvim-ts-autotag" },
 
 	-- FZF Lua
-	use({
-		"ibhagwan/fzf-lua",
-		config = function()
-			require("plugins_setup.fzf")
-		end,
-	})
+	{ src = "https://github.com/ibhagwan/fzf-lua" },
 
 	-- Completion
-	use({
-		"hrsh7th/nvim-cmp",
-		requires = {
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-path",
-			"L3MON4D3/LuaSnip",
-			"saadparwaiz1/cmp_luasnip",
-		},
-		config = function()
-			require("plugins_setup.cmp")
-		end,
-	})
+	{ src = "https://github.com/hrsh7th/nvim-cmp" },
+	{ src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
+	{ src = "https://github.com/hrsh7th/cmp-buffer" },
+	{ src = "https://github.com/hrsh7th/cmp-path" },
+	{ src = "https://github.com/L3MON4D3/LuaSnip" },
+	{ src = "https://github.com/saadparwaiz1/cmp_luasnip" },
+	-- GitHub Copilot
+	{ src = "https://github.com/zbirenbaum/copilot.lua", name = "copilot.lua" },
+	{ src = "https://github.com/zbirenbaum/copilot-cmp", name = "copilot-cmp" },
 
 	-- Autopairs
-	use({
-		"windwp/nvim-autopairs",
-		config = function()
-			require("nvim-autopairs").setup({})
-		end,
-	})
+	{ src = "https://github.com/windwp/nvim-autopairs" },
 
-	-- AI Completion
-	use({
-		"Exafunction/windsurf.nvim",
-		requires = { "nvim-lua/plenary.nvim", "hrsh7th/nvim-cmp" },
-		config = function() end,
-	})
+	-- Git
+	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
 
 	-- Flutter
-	use({
-		"nvim-flutter/flutter-tools.nvim",
-		requires = { "nvim-lua/plenary.nvim", "stevearc/dressing.nvim" },
-		config = function()
-			require("plugins_setup.flutter-tools")
-		end,
-	})
+	{ src = "https://github.com/nvim-flutter/flutter-tools.nvim" },
+	{ src = "https://github.com/stevearc/dressing.nvim" },
+})
 
-	-- Vim Airline
-	use({ "vim-airline/vim-airline" })
-
-	-- Smear Cursor
-	use({
-		"sphamba/smear-cursor.nvim",
-		config = function()
-			require("smear_cursor").setup()
-		end,
-	})
-
-	-- Automatically sync packer
-	if packer_bootstrap then
-		require("packer").sync()
-	end
-end)
+-- Plugins config
+require("plugins_setup.fyler")
+require("plugins_setup.lsp")
+require("plugins_setup.none-ls")
+require("plugins_setup.treesitter")
+require("plugins_setup.fzf")
+require("plugins_setup.cmp")
+require("plugins_setup.gitsigns")
+require("plugins_setup.flutter-tools")
+require("plugins_setup.copilot")
+require("nvim-autopairs").setup({})

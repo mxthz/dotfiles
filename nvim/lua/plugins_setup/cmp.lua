@@ -1,6 +1,7 @@
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 
 local cmp = require('cmp')
+
 cmp.setup({
   snippet = {
     expand = function(args)
@@ -16,8 +17,8 @@ cmp.setup({
     ['<CR>'] = cmp.mapping.confirm({ select = false })
   }),
   sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-    { name = 'cmp_ai' },
-  }, { { name = 'buffer' } })
+    { name = 'copilot', priority = 1000 },
+    { name = 'nvim_lsp', priority = 900 },
+    { name = 'luasnip', priority = 800 },
+  }, { { name = 'buffer', priority = 500 } })
 })

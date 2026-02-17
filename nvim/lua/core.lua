@@ -5,7 +5,8 @@ local opts = { silent = true, noremap = true }
 --                                     THEME
 -- =============================================================================
 vim.g.colors_name = "dracula"
-vim.cmd("colorscheme dracula")
+--vim.cmd("colorscheme dracula")
+vim.cmd.colorscheme("dracula")
 vim.cmd(":highlight Normal ctermbg=black")
 
 -- =============================================================================
@@ -36,6 +37,18 @@ set.undodir = vim.fn.expand("~/.undofiles")
 set.backup = false
 set.swapfile = false
 
+-- Auto-reload buffers when files change on disk
+set.autoread = true
+-- Trigger autoread on specific events
+vim.api.nvim_create_autocmd({
+	"BufEnter",
+	"CursorHold",
+	"CursorHoldI",
+	"FocusGained",
+}, {
+	command = "checktime",
+})
+
 -- =============================================================================
 --                                    KEYMAPS
 -- =============================================================================
@@ -44,6 +57,7 @@ vim.g.mapleader = ","
 -- Highlights
 vim.keymap.set("n", "<leader>h", ":set hls!<CR>", opts)
 vim.keymap.set("n", "<leader>;", "<C-^>", opts)
+vim.keymap.set("n", "<C-x>", ":bdelete<CR>", opts)
 
 -- =============================================================================
 --                                   COMMANDS
