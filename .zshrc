@@ -82,7 +82,7 @@ export DOCKER_HOST="unix://${HOME}/.config/colima/default/docker.sock"
 
 alias tma='tmux attach || tmux new-session'
 alias sudo="sudo "
-alias v='nvim'
+alias v='nvim .'
 alias vim='nvim'
 alias gmj='gitmoji -c'
 alias bbd='brew bundle dump -f --global'
@@ -99,3 +99,11 @@ source "/opt/homebrew/opt/zsh-git-prompt/zshrc.sh"
 
 # Load Oh My Zsh
 source $ZSH/oh-my-zsh.sh
+
+# pnpm
+export PNPM_HOME="/Users/mxthz/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
