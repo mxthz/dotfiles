@@ -15,8 +15,9 @@ vim.keymap.set("n", "-", function()
 		-- Fyler is open, close it
 		vim.api.nvim_win_close(fyler_win, false)
 	else
-		-- Fyler not open, open it as left sidebar
+		-- Fyler not open, open it as left sidebar then return focus to file buffer
 		require("fyler").open({ kind = "split_left" })
+		vim.cmd("wincmd p")
 	end
 end, { desc = "Toggle fyler tree open/close" })
 
@@ -117,3 +118,19 @@ require("fzf-lua").files = function(opts)
 	end
 	return original_files(opts)
 end
+
+-- Quit NeoVim when fyler is the last remaining window
+vim.api.nvim_create_autocmd("WinClosed", {
+	callback = function()
+		vim.schedule(function()
+			local wins = vim.api.nvim_list_wins()
+			if #wins == 1 then
+				local buf = vim.api.nvim_win_get_buf(wins[1])
+				local buf_name = vim.api.nvim_buf_get_name(buf)
+				if buf_name:match("fyler://") then
+					vim.cmd("quit")
+				end
+			end
+		end)
+	end,
+})
