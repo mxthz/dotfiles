@@ -24,6 +24,7 @@ brew "tree-sitter"
 brew "neovim"
 brew "ollama", restart_service: :changed
 brew "openjdk@17"
+brew "rbenv"
 brew "rclone"
 brew "rustup"
 brew "tmux"

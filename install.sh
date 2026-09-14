@@ -20,12 +20,18 @@ link() {
   echo "Linked $dest -> $src"
 }
 
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  echo "Installing oh-my-zsh..."
+  RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+
 link ".gitconfig" "$HOME/.gitconfig"
 link ".tmux.conf" "$HOME/.tmux.conf"
 link ".zshrc" "$HOME/.zshrc"
 link ".Brewfile" "$HOME/.Brewfile"
 link "nvim" "$HOME/.config/nvim"
 link "ghostty/config" "$HOME/.config/ghostty/config"
+link "pretty.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/pretty.zsh-theme"
 
 if command -v brew >/dev/null 2>&1; then
   echo "Installing Homebrew packages..."
@@ -34,4 +40,4 @@ else
   echo "Homebrew not found; skipping 'brew bundle'. Install it from https://brew.sh first."
 fi
 
-echo "Done."
+echo "Done. Restart your shell (or run 'exec zsh') to pick up the changes."
