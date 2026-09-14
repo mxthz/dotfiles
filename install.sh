@@ -46,6 +46,7 @@ else
 fi
 
 echo "Installing tmux plugins..."
-"$HOME/.tmux/plugins/tpm/bin/install_plugins" || true
+tmux kill-server 2>/dev/null || true
+"$HOME/.tmux/plugins/tpm/bin/install_plugins"
 
 echo "Done. Restart your shell (or run 'exec zsh') to pick up the changes."
