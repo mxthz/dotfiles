@@ -35,6 +35,9 @@ fi
 # Disable Homebrew auto-update
 #export HOMEBREW_NO_AUTO_UPDATE=1
 
+# Disable Copilot CLI auto-update
+export COPILOT_AUTO_UPDATE=false
+
 # Homemade scripts
 pathadd "$HOME/bin"
 pathadd "$HOME/dotfiles/shell_scripts"
@@ -73,8 +76,8 @@ export NODE_CPPFLAGS="-I/opt/homebrew/opt/node@18/include"
 # Combine all CPPFLAGS (avoids overwriting)
 export CPPFLAGS="${JAVA_CPPFLAGS} ${NODE_CPPFLAGS}"
 
-# Docker
-export DOCKER_HOST="unix://${HOME}/.config/colima/default/docker.sock"
+# Docker (OrbStack)
+export DOCKER_HOST="unix://${HOME}/.orbstack/run/docker.sock"
 
 # =============================================================================
 #                                    Aliases
@@ -82,7 +85,7 @@ export DOCKER_HOST="unix://${HOME}/.config/colima/default/docker.sock"
 
 alias tma='tmux attach || tmux new-session'
 alias sudo="sudo "
-alias v='nvim .'
+alias v='nvim'
 alias vim='nvim'
 alias gmj='gitmoji -c'
 alias bbd='brew bundle dump -f --global'
@@ -107,3 +110,6 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# rbenv
+eval "$(rbenv init - zsh)"

@@ -1,0 +1,2 @@
+# Keep macOS Option/dead-key input available for accents like á, é, ñ, ü.
+macos-option-as-alt = false
