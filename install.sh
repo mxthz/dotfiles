@@ -25,6 +25,11 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
   RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+  echo "Installing tmux plugin manager (TPM)..."
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+fi
+
 link ".gitconfig" "$HOME/.gitconfig"
 link ".tmux.conf" "$HOME/.tmux.conf"
 link ".zshrc" "$HOME/.zshrc"
@@ -39,5 +44,8 @@ if command -v brew >/dev/null 2>&1; then
 else
   echo "Homebrew not found; skipping 'brew bundle'. Install it from https://brew.sh first."
 fi
+
+echo "Installing tmux plugins..."
+"$HOME/.tmux/plugins/tpm/bin/install_plugins" || true
 
 echo "Done. Restart your shell (or run 'exec zsh') to pick up the changes."
