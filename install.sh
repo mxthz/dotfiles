@@ -20,23 +20,24 @@ link() {
   echo "Linked $dest -> $src"
 }
 
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-  echo "Installing oh-my-zsh..."
-  RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-fi
-
-if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
-  echo "Installing tmux plugin manager (TPM)..."
-  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
-fi
-
 link ".gitconfig" "$HOME/.gitconfig"
 link ".tmux.conf" "$HOME/.tmux.conf"
 link ".zshrc" "$HOME/.zshrc"
 link ".Brewfile" "$HOME/.Brewfile"
 link "nvim" "$HOME/.config/nvim"
 link "ghostty/config" "$HOME/.config/ghostty/config"
+
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  echo "Installing oh-my-zsh..."
+  RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+
 link "pretty.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/pretty.zsh-theme"
+
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+  echo "Installing tmux plugin manager (TPM)..."
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+fi
 
 if command -v brew >/dev/null 2>&1; then
   echo "Installing Homebrew packages..."
