@@ -2,14 +2,6 @@ local set = vim.o
 local opts = { silent = true, noremap = true }
 
 -- =============================================================================
---                                     THEME
--- =============================================================================
-vim.g.colors_name = "dracula"
---vim.cmd("colorscheme dracula")
-vim.cmd.colorscheme("dracula")
-vim.cmd(":highlight Normal ctermbg=black")
-
--- =============================================================================
 --                                   SETTINGS
 -- =============================================================================
 -- Line indicators

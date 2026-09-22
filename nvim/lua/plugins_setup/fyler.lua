@@ -29,32 +29,37 @@ vim.keymap.set("n", "-", function()
 end, { desc = "Toggle fyler tree open/close" })
 
 require("fyler").setup({
-	default_explorer = true,
-	close_on_select = false,
-	icon_provider = "nvim_web_devicons",
-	track_current_buffer = true,
-	win = {
-		border = "single",
-		kind = "split_left", -- Persistent sidebar on the left
-		buf_opts = {
-			buflisted = false, -- Don't list fyler buffer in buffer list
-			bufhidden = "hide", -- Hide instead of wipe to prevent issues
-			buftype = "", -- Allow normal file operations
-			swapfile = false, -- No swap file
-			modifiable = true, -- Allow modification when needed
+	use_as_default_explorer = true,
+	follow_current_file = true,
+	kind = "split_left", -- Persistent sidebar on the left
+	integrations = {
+		icon = "nvim_web_devicons",
+	},
+	buf_opts = {
+		buflisted = false, -- Don't list fyler buffer in buffer list
+		bufhidden = "hide", -- Hide instead of wipe to prevent issues
+		buftype = "", -- Allow normal file operations
+		swapfile = false, -- No swap file
+		modifiable = true, -- Allow modification when needed
+	},
+	kind_presets = {
+		split_left = {
+			border = "single",
+			width = "25%",
 		},
 	},
 	mappings = {
-		["q"] = "CloseView",
-		["<CR>"] = "Select", -- Opens file in main buffer, keeps tree open
-		["<C-t>"] = "SelectTab",
-		["|"] = "SelectVSplit",
-		["-"] = false, -- Disable fyler's built-in - mapping to prevent conflicts
-		["^"] = "GotoParent",
-		["="] = "GotoCwd",
-		["."] = "GotoNode",
-		["#"] = "CollapseAll",
-		["<BS>"] = "CollapseNode",
+		n = {
+			["q"] = { action = "close", desc = "Close finder" },
+			["<CR>"] = { action = "select", args = { pick = true }, desc = "Open with window picker" }, -- Opens file in main buffer, keeps tree open
+			["<C-t>"] = { action = "select", args = { tabedit = true }, desc = "Open in new tab" },
+			["|"] = { action = "select", args = { vsplit = true }, desc = "Open in vertical split" },
+			["-"] = { disabled = true }, -- Disable fyler's built-in - mapping to prevent conflicts
+			["^"] = { action = "visit", args = { parent = true }, desc = "Go to parent directory" },
+			["="] = { action = "visit", desc = "Go to root directory" },
+			["."] = { action = "visit", args = { cursor = true }, desc = "Enter directory under cursor" },
+			["<BS>"] = { action = "shrink", args = { parent = true }, desc = "Collapse parent directory" },
+		},
 	},
 })
 

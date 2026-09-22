@@ -62,3 +62,9 @@ require("plugins_setup.cmp")
 require("plugins_setup.gitsigns")
 require("plugins_setup.flutter-tools")
 require("nvim-autopairs").setup({})
+
+-- =============================================================================
+--                                     THEME
+-- =============================================================================
+vim.cmd.colorscheme("dracula")
+vim.cmd(":highlight Normal ctermbg=black")
