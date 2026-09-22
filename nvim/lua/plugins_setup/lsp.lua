@@ -49,7 +49,6 @@ local lsp_flags = {
 }
 
 require("mason").setup()
-local lspconfig = require("lspconfig")
 
 -- A list of servers to install and configure
 local servers = {
@@ -61,55 +60,54 @@ local servers = {
 	"html",
 }
 
--- Ensure these servers are installed by Mason
+-- Apply our on_attach/flags to every server config
+vim.lsp.config("*", {
+	on_attach = on_attach,
+	flags = lsp_flags,
+})
+
+vim.lsp.config("ts_ls", {
+	settings = {
+		typescript = {
+			inlayHints = {
+				includeInlayParameterNameHints = "all",
+				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+				includeInlayFunctionParameterTypeHints = true,
+				includeInlayVariableTypeHints = true,
+				includeInlayPropertyDeclarationTypeHints = true,
+				includeInlayFunctionLikeReturnTypeHints = true,
+				includeInlayEnumMemberValueHints = true,
+			},
+		},
+		javascript = {
+			inlayHints = {
+				includeInlayParameterNameHints = "all",
+				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+				includeInlayFunctionParameterTypeHints = true,
+				includeInlayVariableTypeHints = true,
+				includeInlayPropertyDeclarationTypeHints = true,
+				includeInlayFunctionLikeReturnTypeHints = true,
+				includeInlayEnumMemberValueHints = true,
+			},
+		},
+	},
+})
+
+vim.lsp.config("eslint", {
+	on_attach = function(client, bufnr)
+		on_attach(client, bufnr)
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			buffer = bufnr,
+			command = "EslintFixAll",
+		})
+	end,
+})
+
+-- Ensure these servers are installed by Mason; mason-lspconfig automatically
+-- enables (vim.lsp.enable) any server it manages once installed.
 require("mason-lspconfig").setup({
 	ensure_installed = servers,
 })
-
-for _, server_name in ipairs(servers) do
-	local server_opts = {
-		-- This is the crucial part: we pass our on_attach to every server.
-		on_attach = on_attach,
-	}
-
-	--   Server-specific overrides
-	if server_name == "ts_ls" then
-		server_opts.settings = {
-			typescript = {
-				inlayHints = {
-					includeInlayParameterNameHints = "all",
-					includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-					includeInlayFunctionParameterTypeHints = true,
-					includeInlayVariableTypeHints = true,
-					includeInlayPropertyDeclarationTypeHints = true,
-					includeInlayFunctionLikeReturnTypeHints = true,
-					includeInlayEnumMemberValueHints = true,
-				},
-			},
-			javascript = {
-				inlayHints = {
-					includeInlayParameterNameHints = "all",
-					includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-					includeInlayFunctionParameterTypeHints = true,
-					includeInlayVariableTypeHints = true,
-					includeInlayPropertyDeclarationTypeHints = true,
-					includeInlayFunctionLikeReturnTypeHints = true,
-					includeInlayEnumMemberValueHints = true,
-				},
-			},
-		}
-	elseif server_name == "eslint" then
-		server_opts.on_attach = function(client, bufnr)
-			on_attach(client, bufnr)
-			vim.api.nvim_create_autocmd("BufWritePre", {
-				buffer = bufnr,
-				command = "EslintFixAll",
-			})
-		end
-	end
-
-	lspconfig[server_name].setup(server_opts)
-end
 
 local module = {
 	on_attach = on_attach,
