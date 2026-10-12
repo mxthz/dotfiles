@@ -1,7 +1,11 @@
 [alias]
 [safe]
 	directory = /opt/homebrew
+[include]
+	path = ~/.gitconfig.local
 [init]
 	defaultBranch = main
 [core]
+	pager = delta
+[delta]
 	pager = less -R

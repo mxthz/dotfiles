@@ -3,3 +3,4 @@ nvim/lua/secrets.lua
 .DS_Store
 .Brewfile.lock.json
 *.log
+.gitconfig.local

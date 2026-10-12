@@ -21,6 +21,7 @@ link() {
 }
 
 link ".gitconfig" "$HOME/.gitconfig"
+link ".gitconfig.local" "$HOME/.gitconfig.local"
 link ".tmux.conf" "$HOME/.tmux.conf"
 link ".zshrc" "$HOME/.zshrc"
 link ".Brewfile" "$HOME/.Brewfile"
