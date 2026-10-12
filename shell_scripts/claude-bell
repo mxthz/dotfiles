@@ -1,0 +1,6 @@
+#!/bin/sh
+TTY=$(ps -o tty= -p "$CLAUDE_PID" 2>/dev/null | tr -d ' ')
+[ -z "$TTY" ] && exit 0
+FRONT=$(lsappinfo info -only name -app "$(lsappinfo front)" 2>/dev/null)
+echo "$FRONT" | grep -q '"Ghostty"' && exit 0
+printf '\a' > "/dev/$TTY"
