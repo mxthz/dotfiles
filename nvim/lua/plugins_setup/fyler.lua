@@ -35,6 +35,22 @@ require("fyler").setup({
 	integrations = {
 		icon = "nvim_web_devicons",
 	},
+	extensions = {
+		git = { enabled = true, inline = false }, -- Git status colors + right-aligned icons
+		watcher = { enabled = true }, -- Auto-refresh on filesystem/.git changes (e.g. git add in a terminal)
+	},
+	hooks = {
+		-- Dracula colors for git status (runs before the git extension's defaults, so these win)
+		on_highlight = function(highlights)
+			highlights.FylerGitModified = { fg = "#F1FA8C" }
+			highlights.FylerGitStaged = { fg = "#50FA7B" }
+			highlights.FylerGitUntracked = { fg = "#8BE9FD" }
+			highlights.FylerGitDeleted = { fg = "#FF5555" }
+			highlights.FylerGitConflict = { fg = "#FF5555" }
+			highlights.FylerGitRenamed = { fg = "#BD93F9" }
+			highlights.FylerGitIgnored = { link = "Comment" }
+		end,
+	},
 	buf_opts = {
 		buflisted = false, -- Don't list fyler buffer in buffer list
 		bufhidden = "hide", -- Hide instead of wipe to prevent issues
