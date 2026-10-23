@@ -49,7 +49,55 @@ vim.g.mapleader = ","
 -- Highlights
 vim.keymap.set("n", "<leader>h", ":set hls!<CR>", opts)
 vim.keymap.set("n", "<leader>;", "<C-^>", opts)
-vim.keymap.set("n", "<C-x>", ":bdelete<CR>", opts)
+-- Close buffer but keep the window: no-name buffer quits, file switches to previous file (or empty buffer)
+vim.keymap.set("n", "<C-x>", function()
+	local buf = vim.api.nvim_get_current_buf()
+	local name = vim.api.nvim_buf_get_name(buf)
+
+	if vim.bo[buf].filetype == "fyler_finder" then
+		require("fyler").close()
+		return
+	end
+
+	if name == "" and vim.bo[buf].buftype == "" then
+		vim.cmd("confirm qall")
+		return
+	end
+
+	if vim.bo[buf].modified then
+		local choice = vim.fn.confirm("Save changes to " .. vim.fn.fnamemodify(name, ":~:.") .. "?", "&Yes\n&No\n&Cancel")
+		if choice == 1 then
+			vim.cmd("write")
+		elseif choice ~= 2 then
+			return
+		end
+	end
+
+	-- Pick replacement: alternate buffer, else most recently used listed file, else a new empty buffer
+	local function usable(b)
+		return b > 0 and b ~= buf and vim.api.nvim_buf_is_valid(b) and vim.bo[b].buflisted and vim.bo[b].buftype == ""
+	end
+	local replacement = vim.fn.bufnr("#")
+	if not usable(replacement) then
+		local infos = vim.fn.getbufinfo({ buflisted = 1 })
+		table.sort(infos, function(a, b)
+			return a.lastused > b.lastused
+		end)
+		replacement = nil
+		for _, info in ipairs(infos) do
+			if usable(info.bufnr) then
+				replacement = info.bufnr
+				break
+			end
+		end
+	end
+	replacement = replacement or vim.api.nvim_create_buf(true, false)
+
+	for _, win in ipairs(vim.fn.win_findbuf(buf)) do
+		vim.api.nvim_win_set_buf(win, replacement)
+	end
+	vim.api.nvim_buf_delete(buf, { force = true })
+end, opts)
 
 -- =============================================================================
 --                                   COMMANDS

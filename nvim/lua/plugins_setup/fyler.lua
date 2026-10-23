@@ -1,32 +1,41 @@
 vim.keymap.set("n", "-", function()
 	local fyler = require("fyler")
+	local buf_name = vim.api.nvim_buf_get_name(0)
 
-	-- Remember current window before toggling
-	local cur_win = vim.api.nvim_get_current_win()
-	local cur_buf = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(cur_win))
-	local is_in_fyler = cur_buf:match("fyler://")
-
-	-- Check if fyler is currently visible
-	local fyler_visible = false
-	for _, win in ipairs(vim.api.nvim_list_wins()) do
-		local buf_name = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(win))
-		if buf_name:match("fyler://") then
-			fyler_visible = true
-			break
-		end
+	-- From inside the tree: close it
+	if vim.bo.filetype == "fyler_finder" then
+		fyler.close()
+		return
 	end
 
-	fyler.toggle()
+	local inst = require("fyler.finder").instance_get_or_nil()
 
-	-- If we just opened fyler (it wasn't visible), schedule focus back to file buffer
-	if not fyler_visible and not is_in_fyler then
+	-- No-name buffer: toggle the tree without focusing it
+	if buf_name == "" then
+		if inst then
+			fyler.close()
+			return
+		end
+		local cur_win = vim.api.nvim_get_current_win()
+		fyler.open()
 		vim.schedule(function()
 			if vim.api.nvim_win_is_valid(cur_win) then
 				vim.api.nvim_set_current_win(cur_win)
 			end
 		end)
+		return
 	end
-end, { desc = "Toggle fyler tree open/close" })
+
+	-- Tree closed: open it focused (built-in follow puts cursor on the current file)
+	if not inst then
+		fyler.open()
+		return
+	end
+
+	-- Tree already open: jump into it at the current file
+	vim.api.nvim_set_current_win(inst.win_id)
+	inst:follow({ target_path = buf_name })
+end, { desc = "Reveal current file in tree / close tree" })
 
 require("fyler").setup({
 	use_as_default_explorer = true,
@@ -36,19 +45,45 @@ require("fyler").setup({
 		icon = "nvim_web_devicons",
 	},
 	extensions = {
-		git = { enabled = true, inline = false }, -- Git status colors + right-aligned icons
+		git = {
+			enabled = true,
+			inline = false, -- Git status colors + right-aligned icons
+			-- VSCode-style letters, keyed by `git status --porcelain` XY codes
+			icons = {
+				[" M"] = { icon = "M", hl = "FylerGitModified" },
+				["M "] = { icon = "M", hl = "FylerGitModified" },
+				["MM"] = { icon = "M", hl = "FylerGitModified" },
+				["A "] = { icon = "A", hl = "FylerGitAdded" },
+				["AM"] = { icon = "A", hl = "FylerGitAdded" },
+				[" A"] = { icon = "A", hl = "FylerGitAdded" },
+				["??"] = { icon = "U", hl = "FylerGitUntracked" },
+				[" D"] = { icon = "D", hl = "FylerGitDeleted" },
+				["D "] = { icon = "D", hl = "FylerGitDeleted" },
+				["R "] = { icon = "R", hl = "FylerGitRenamed" },
+				["RM"] = { icon = "R", hl = "FylerGitRenamed" },
+				["UU"] = { icon = "!", hl = "FylerGitConflict" },
+				["AA"] = { icon = "!", hl = "FylerGitConflict" },
+				["DD"] = { icon = "!", hl = "FylerGitConflict" },
+				["AU"] = { icon = "!", hl = "FylerGitConflict" },
+				["UA"] = { icon = "!", hl = "FylerGitConflict" },
+				["DU"] = { icon = "!", hl = "FylerGitConflict" },
+				["UD"] = { icon = "!", hl = "FylerGitConflict" },
+				["!!"] = { icon = "", hl = "FylerGitIgnored" }, -- VSCode only dims ignored files, no letter
+			},
+		},
 		watcher = { enabled = true }, -- Auto-refresh on filesystem/.git changes (e.g. git add in a terminal)
 	},
 	hooks = {
-		-- Dracula colors for git status (runs before the git extension's defaults, so these win)
-		on_highlight = function(highlights)
-			highlights.FylerGitModified = { fg = "#F1FA8C" }
-			highlights.FylerGitStaged = { fg = "#50FA7B" }
-			highlights.FylerGitUntracked = { fg = "#8BE9FD" }
-			highlights.FylerGitDeleted = { fg = "#FF5555" }
-			highlights.FylerGitConflict = { fg = "#FF5555" }
-			highlights.FylerGitRenamed = { fg = "#BD93F9" }
-			highlights.FylerGitIgnored = { link = "Comment" }
+		-- VSCode Dark+ gitDecoration colors (runs before the git extension's defaults, so these win)
+		on_highlight = function(highlights, palette)
+			highlights.FylerDirectoryName = { fg = palette.fg } -- Folder names same color as files, like VSCode
+			highlights.FylerGitModified = { fg = "#E2C08D" }
+			highlights.FylerGitAdded = { fg = "#81B88B" }
+			highlights.FylerGitUntracked = { fg = "#73C991" }
+			highlights.FylerGitDeleted = { fg = "#C74E39" }
+			highlights.FylerGitRenamed = { fg = "#73C991" }
+			highlights.FylerGitConflict = { fg = "#E4676B" }
+			highlights.FylerGitIgnored = { fg = "#8C8C8C" }
 		end,
 	},
 	buf_opts = {
@@ -79,74 +114,6 @@ require("fyler").setup({
 	},
 })
 
--- Strong protection for fyler buffers against replacement
-vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = "*",
-	callback = function()
-		local buf_name = vim.api.nvim_buf_get_name(0)
-		if buf_name:match("fyler://") then
-			-- Set buffer options to protect fyler buffer
-			vim.bo.buftype = ""
-			vim.bo.modifiable = true
-			vim.bo.swapfile = false
-			vim.bo.buflisted = false
-		end
-	end,
-})
-
--- Prevent FzfLua and other plugins from targeting fyler windows
-vim.api.nvim_create_autocmd("WinEnter", {
-	pattern = "*",
-	callback = function()
-		local buf_name = vim.api.nvim_buf_get_name(0)
-		if buf_name:match("fyler://") then
-			-- If something tries to open in fyler window, redirect to main buffer
-			local main_win = nil
-			for _, win in ipairs(vim.api.nvim_list_wins()) do
-				local buf = vim.api.nvim_win_get_buf(win)
-				local win_buf_name = vim.api.nvim_buf_get_name(buf)
-				if not win_buf_name:match("fyler://") then
-					main_win = win
-					break
-				end
-			end
-
-			-- If there's no main window, create one
-			if not main_win then
-				-- Check if we're in a valid state to create windows (not during closing operations)
-				-- Use pcall to handle the case where window operations might conflict
-				local success = pcall(function()
-					vim.cmd("wincmd l")
-					if vim.api.nvim_buf_get_name(0):match("fyler://") then
-						-- Still in fyler, force split to create main buffer
-						vim.cmd("vsplit")
-						vim.cmd("enew")
-					end
-				end)
-
-				-- If the operation failed due to window closing conflict, just return silently
-				if not success then
-					return
-				end
-			end
-		end
-	end,
-})
-
--- Override FzfLua to never target fyler windows
-local original_fzf_lua = require("fzf-lua")
-local original_files = original_fzf_lua.files
-
-require("fzf-lua").files = function(opts)
-	opts = opts or {}
-	-- Ensure FzfLua opens in main buffer, not fyler
-	local current_buf = vim.api.nvim_buf_get_name(0)
-	if current_buf:match("fyler://") then
-		vim.cmd("wincmd l") -- Move to main buffer before opening FzfLua
-	end
-	return original_files(opts)
-end
-
 -- Quit NeoVim when fyler is the last remaining window
 vim.api.nvim_create_autocmd("WinClosed", {
 	callback = function()
@@ -154,9 +121,8 @@ vim.api.nvim_create_autocmd("WinClosed", {
 			local wins = vim.api.nvim_list_wins()
 			if #wins == 1 then
 				local buf = vim.api.nvim_win_get_buf(wins[1])
-				local buf_name = vim.api.nvim_buf_get_name(buf)
-				if buf_name:match("fyler://") then
-					vim.cmd("quit")
+				if vim.bo[buf].filetype == "fyler_finder" then
+					vim.cmd("confirm qall") -- Prompts instead of erroring if hidden buffers have unsaved changes
 				end
 			end
 		end)
