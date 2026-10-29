@@ -102,7 +102,34 @@ require("fyler").setup({
 	mappings = {
 		n = {
 			["q"] = { action = "close", desc = "Close finder" },
-			["<CR>"] = { action = "select", args = { pick = true }, desc = "Open with window picker" }, -- Opens file in main buffer, keeps tree open
+			["<CR>"] = {
+				-- Preview: load the file in the main window but keep focus in the tree.
+				-- If the file is already open in a window, jump into it instead.
+				action = function(self)
+					local fyler_finder = require("fyler.finder")
+					local libpath = require("fyler.lib.path")
+
+					local node_data = fyler_finder.parse_cursor_line(self)
+					local already_open = false
+					if node_data and node_data.type ~= "directory" and node_data.type ~= "link" then
+						local os_path = libpath.to_os(libpath.to_abs(node_data.link or node_data.path))
+						local bufnr = vim.fn.bufnr(os_path)
+						already_open = bufnr ~= -1 and #vim.fn.win_findbuf(bufnr) > 0
+					end
+
+					local tree_win = self.win_id
+					self:select()
+
+					if not already_open then
+						vim.schedule(function()
+							if vim.api.nvim_win_is_valid(tree_win) then
+								vim.api.nvim_set_current_win(tree_win)
+							end
+						end)
+					end
+				end,
+				desc = "Preview file (focus stays in tree unless already open)",
+			},
 			["<C-t>"] = { action = "select", args = { tabedit = true }, desc = "Open in new tab" },
 			["|"] = { action = "select", args = { vsplit = true }, desc = "Open in vertical split" },
 			["-"] = { disabled = true }, -- Disable fyler's built-in - mapping to prevent conflicts
