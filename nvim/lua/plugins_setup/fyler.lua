@@ -84,7 +84,12 @@ require("fyler").setup({
 			highlights.FylerGitRenamed = { fg = "#73C991" }
 			highlights.FylerGitConflict = { fg = "#E4676B" }
 			highlights.FylerGitIgnored = { fg = "#8C8C8C" }
+			highlights.FylerCursorLine = { bg = "#2A2D2E" } -- VSCode list-hover background
 		end,
+	},
+	win_opts = {
+		cursorline = true, -- Highlight the row under the cursor (fyler disables this by default)
+		winhighlight = "CursorLine:FylerCursorLine",
 	},
 	buf_opts = {
 		buflisted = false, -- Don't list fyler buffer in buffer list
