@@ -113,3 +113,12 @@ esac
 
 # rbenv
 eval "$(rbenv init - zsh)"
+
+# Inside tmux, TERM_PROGRAM is overwritten with "tmux"; restore Ghostty's so
+# tools (Claude Code, etc.) still detect it and enable progress/icons.
+if [[ -n "$TMUX" && -n "$GHOSTTY_RESOURCES_DIR" ]]; then
+  export TERM_PROGRAM=ghostty
+  export TERM_PROGRAM_VERSION="$(tmux show-environment -g TERM_PROGRAM_VERSION 2>/dev/null | cut -d= -f2)"
+  # Claude Code clamps to 256 colors under tmux unless told the terminal does truecolor.
+  export CLAUDE_CODE_TMUX_TRUECOLOR=1
+fi
