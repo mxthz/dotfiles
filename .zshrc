@@ -106,13 +106,31 @@ source $ZSH/oh-my-zsh.sh
 # pnpm
 export PNPM_HOME="/Users/mxthz/.local/share/pnpm"
 case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
 
+# NVM
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# CLAUDE CODE
+
+claude-pro() {
+  CLAUDE_CONFIG_DIR="$HOME/.claude-pro" claude "$@"
+}
+
+claude-perso() {
+  CLAUDE_CONFIG_DIR="$HOME/.claude-perso" claude "$@"
+}
+
 # rbenv
 eval "$(rbenv init - zsh)"
+
+# Rust (homebrew rustup proxies: cargo, rustc, etc.)
+export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 
 # Inside tmux, TERM_PROGRAM is overwritten with "tmux"; restore Ghostty's so
 # tools (Claude Code, etc.) still detect it and enable progress/icons.
