@@ -117,13 +117,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 # CLAUDE CODE
+# bare `claude` uses ~/.claude (formerly .claude-perso) by default
 
 claude-pro() {
   CLAUDE_CONFIG_DIR="$HOME/.claude-pro" claude "$@"
-}
-
-claude-perso() {
-  CLAUDE_CONFIG_DIR="$HOME/.claude-perso" claude "$@"
 }
 
 # rbenv
